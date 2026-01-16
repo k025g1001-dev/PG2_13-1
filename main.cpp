@@ -4,17 +4,14 @@
 
 const char kWindowTitle[] = "GC1C_01_ウエキ_ユウト_タイトル";
 
-//====================
 // 定数
-//====================
 const int kBulletMax = 10;
 
-//====================
+
 // Enemyクラス
-//====================
 class Enemy {
 public:
-    static bool isAllDead; // ★静的メンバ変数
+    static bool isAllDead; 
 
     float x, y;
     float radius;
@@ -25,14 +22,14 @@ public:
         this->x = x;
         this->y = y;
         radius = 20.0f;
-        speedX = 1.0f; // ★遅くした
+        speedX = 1.0f; 
         isAlive = true;
     }
 
     void Update(float bulletX, float bulletY, bool bulletActive) {
         if (!isAlive || isAllDead) return;
 
-        // 左右移動（ゆっくり）
+        // 左右移動
         x += speedX;
         if (x < radius || x > 1280 - radius) {
             speedX *= -1;
@@ -45,7 +42,7 @@ public:
             float dist = sqrtf(dx * dx + dy * dy);
 
             if (dist < radius + 10.0f) {
-                isAllDead = true; // ★1体倒したら全滅
+                isAllDead = true; 
             }
         }
     }
@@ -61,20 +58,16 @@ public:
     }
 };
 
-// 静的メンバ変数の実体
+
 bool Enemy::isAllDead = false;
 
-//====================
 // 弾構造体
-//====================
 struct Bullet {
     float x, y;
     bool isActive;
 };
 
-//====================
 // メイン
-//====================
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     Novice::Initialize(kWindowTitle, 1280, 720);
@@ -100,16 +93,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         memcpy(preKeys, keys, 256);
         Novice::GetHitKeyStateAll(keys);
 
-        //====================
+        
         // 更新処理
-        //====================
         // プレイヤー移動
         if (keys[DIK_A]) playerX -= 5;
         if (keys[DIK_D]) playerX += 5;
         if (keys[DIK_W]) playerY -= 5;
         if (keys[DIK_S]) playerY += 5;
 
-        // 弾発射（SPACEを押した瞬間に1発）
+        // 弾発射
         if (preKeys[DIK_SPACE] == 0 && keys[DIK_SPACE] != 0) {
             for (int i = 0; i < kBulletMax; i++) {
                 if (!bullets[i].isActive) {
@@ -131,7 +123,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             }
         }
 
-        // 敵更新（全弾チェック）
+        // 敵更新
         for (int i = 0; i < kBulletMax; i++) {
             enemyA.Update(bullets[i].x, bullets[i].y, bullets[i].isActive);
             enemyB.Update(bullets[i].x, bullets[i].y, bullets[i].isActive);
@@ -148,9 +140,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             }
         }
 
-        //====================
         // 描画処理
-        //====================
         // プレイヤー
         Novice::DrawEllipse(
             (int)playerX, (int)playerY,
