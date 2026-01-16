@@ -7,11 +7,10 @@ const char kWindowTitle[] = "GC1C_01_ウエキ_ユウト_タイトル";
 // 定数
 const int kBulletMax = 10;
 
-
 // Enemyクラス
 class Enemy {
 public:
-    static bool isAllDead; 
+    static bool isAllDead;
 
     float x, y;
     float radius;
@@ -22,7 +21,7 @@ public:
         this->x = x;
         this->y = y;
         radius = 20.0f;
-        speedX = 1.0f; 
+        speedX = 1.0f;
         isAlive = true;
     }
 
@@ -42,7 +41,7 @@ public:
             float dist = sqrtf(dx * dx + dy * dy);
 
             if (dist < radius + 10.0f) {
-                isAllDead = true; 
+                isAllDead = true;
             }
         }
     }
@@ -58,7 +57,6 @@ public:
     }
 };
 
-
 bool Enemy::isAllDead = false;
 
 // 弾構造体
@@ -67,11 +65,13 @@ struct Bullet {
     bool isActive;
 };
 
-// メイン
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+// Windowsアプリでのエントリーポイント(main関数)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
+    // ライブラリの初期化
     Novice::Initialize(kWindowTitle, 1280, 720);
 
+    // キー入力結果を受け取る箱
     char keys[256] = { 0 };
     char preKeys[256] = { 0 };
 
@@ -86,16 +86,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     Enemy enemyA(400, 250);
     Enemy enemyB(800, 350);
 
+    // ウィンドウの×ボタンが押されるまでループ
     while (Novice::ProcessMessage() == 0) {
-
+        // フレームの開始
         Novice::BeginFrame();
 
+        // キー入力を受け取る
         memcpy(preKeys, keys, 256);
         Novice::GetHitKeyStateAll(keys);
 
-        
-        // 更新処理
-        // プレイヤー移動
+        ///
+        /// ↓更新処理ここから
+        ///
+         // プレイヤー移動
         if (keys[DIK_A]) playerX -= 5;
         if (keys[DIK_D]) playerX += 5;
         if (keys[DIK_W]) playerY -= 5;
@@ -139,8 +142,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
                 bullets[i].isActive = false;
             }
         }
+        ///
+        /// ↑更新処理ここまで
+        ///
 
-        // 描画処理
+        ///
+        /// ↓描画処理ここから
+        ///
         // プレイヤー
         Novice::DrawEllipse(
             (int)playerX, (int)playerY,
@@ -161,21 +169,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         enemyA.Draw();
         enemyB.Draw();
 
+        ///
+        /// ↑描画処理ここまで
+        ///
+       
         // デバッグ表示
         Novice::ScreenPrintf(20, 20, "enemyA isAlive = %d", enemyA.isAlive);
         Novice::ScreenPrintf(20, 40, "enemyB isAlive = %d", enemyB.isAlive);
         Novice::ScreenPrintf(20, 60, "WASD : Move");
         Novice::ScreenPrintf(20, 80, "SPACE : Shot");
         Novice::ScreenPrintf(20, 100, "R : Reset");
-
-
+        // フレームの終了
         Novice::EndFrame();
 
-        if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE]) {
+        // ESCキーが押されたらループを抜ける
+        if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
             break;
         }
     }
 
+    // ライブラリの終了
     Novice::Finalize();
     return 0;
 }
+
+
