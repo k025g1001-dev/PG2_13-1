@@ -28,7 +28,7 @@ void Enemy::Update(float bulletX, float bulletY, bool bulletActive) {
         float dist = sqrtf(dx * dx + dy * dy);
 
         if (dist < radius + 10.0f) {
-            isAllDead = true;   // 1体当たったら全滅
+            isAllDead = true;   
         }
     }
 }
