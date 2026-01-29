@@ -2,16 +2,18 @@
 #include <Novice.h>
 #include <cmath>
 
+bool Enemy::isAllDead = false;
+
 Enemy::Enemy(float x, float y) {
     this->x = x;
     this->y = y;
     radius = 20.0f;
-    speedX = 0.5f; 
+    speedX = 0.5f;
     isAlive = true;
 }
 
 void Enemy::Update(float bulletX, float bulletY, bool bulletActive) {
-    if (!isAlive) return;
+    if (!isAlive || isAllDead) return;
 
     // 左右移動
     x += speedX;
@@ -26,13 +28,13 @@ void Enemy::Update(float bulletX, float bulletY, bool bulletActive) {
         float dist = sqrtf(dx * dx + dy * dy);
 
         if (dist < radius + 10.0f) {
-            isAlive = false;
+            isAllDead = true;   // 1体当たったら全滅
         }
     }
 }
 
 void Enemy::Draw() {
-    if (isAlive) {
+    if (isAlive && !isAllDead) {
         Novice::DrawEllipse(
             (int)x, (int)y,
             (int)radius, (int)radius,

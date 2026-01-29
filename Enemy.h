@@ -2,6 +2,8 @@
 
 class Enemy {
 public:
+    static bool isAllDead;   // 全敵共通フラグ
+
     float x, y;
     float radius;
     float speedX;
